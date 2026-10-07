@@ -1,0 +1,15 @@
+<html><head><meta charset='utf-8'><title>Attack Story Report</title><style>
+body{font-family:system-ui,Segoe UI,Arial,sans-serif;margin:0;background:#f1f5f9;color:#0f172a}
+header{background:#0f172a;color:#fff;padding:18px 28px}
+main{max-width:1100px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:10px;padding:18px 22px;margin-bottom:20px;box-shadow:0 1px 3px #0002}
+.sev{display:inline-block;padding:2px 10px;border-radius:99px;color:#fff;font-weight:700;font-size:12px}
+.CRITICAL{background:#b91c1c}.HIGH{background:#ea580c}.MEDIUM{background:#ca8a04}
+.bar{height:10px;background:#e2e8f0;border-radius:6px;overflow:hidden;width:240px;display:inline-block}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#f59e0b,#dc2626)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid #e2e8f0;padding:6px 8px;text-align:left;vertical-align:top}
+th{background:#f8fafc}code{background:#f1f5f9;padding:1px 4px;border-radius:4px;font-size:12px}
+.chip{display:inline-block;background:#e2e8f0;border-radius:6px;padding:1px 7px;margin:1px;font-size:12px}
+.row{display:flex;gap:20px;flex-wrap:wrap}.muted{color:#64748b;font-size:13px}
+</style></head><body><header><h2 style='margin:0'>Attack Story Builder - Incident Report</h2><div class='muted' style='color:#cbd5e1'>6,411 logs processed - 7 suspicious events - <b>0 alerts</b> - 5 watch-listed (suppressed)</div></header><main><div class='card'><h3>No attacks detected</h3><p class='muted'>Every suspicious event was isolated (single stage) or below the risk threshold, so no alert was raised.</p></div><div class='card'><h3>Watch-list (suppressed - NOT alerts)</h3><table><tr><th>Users</th><th>Stages seen</th><th>Risk</th><th>Why suppressed</th></tr><tr><td>user20</td><td>Initial Access</td><td>0.45</td><td>only one kill-chain stage - not enough to call an attack</td></tr><tr><td>user28</td><td>Initial Access + Exfiltration</td><td>0.67</td><td>combined risk 0.67 below alert threshold 0.7</td></tr><tr><td>user30</td><td>Collection</td><td>0.35</td><td>only one kill-chain stage - not enough to call an attack</td></tr><tr><td>user24</td><td>Exfiltration</td><td>0.6</td><td>only one kill-chain stage - not enough to call an attack</td></tr><tr><td>user22</td><td>Exfiltration</td><td>0.4</td><td>only one kill-chain stage - not enough to call an attack</td></tr></table></div></main></body></html>

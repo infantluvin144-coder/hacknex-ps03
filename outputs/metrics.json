@@ -1,0 +1,70 @@
+{
+  "attack_dataset": {
+    "log_lines": 6499,
+    "attacks_injected": 3,
+    "true_positives": 3,
+    "false_negatives": 0,
+    "false_positive_alerts": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "per_attack": [
+      {
+        "attack": "A1",
+        "user": "user04",
+        "detected": true,
+        "stage_recall": 1.0,
+        "stages_found": [
+          "Initial Access",
+          "Collection",
+          "Exfiltration"
+        ],
+        "risk": 0.96,
+        "severity": "CRITICAL",
+        "first_event": "2026-09-05T02:10:00",
+        "true_start": "2026-09-05T02:10:00",
+        "order_correct": true
+      },
+      {
+        "attack": "A2",
+        "user": "user13",
+        "detected": true,
+        "stage_recall": 1.0,
+        "stages_found": [
+          "Initial Access",
+          "Privilege Escalation",
+          "Discovery",
+          "Exfiltration"
+        ],
+        "risk": 0.98,
+        "severity": "CRITICAL",
+        "first_event": "2026-09-06T03:01:00",
+        "true_start": "2026-09-06T02:50:00",
+        "order_correct": true
+      },
+      {
+        "attack": "A3",
+        "user": "user07",
+        "detected": true,
+        "stage_recall": 1.0,
+        "stages_found": [
+          "Initial Access",
+          "Collection",
+          "Exfiltration"
+        ],
+        "risk": 0.75,
+        "severity": "MEDIUM",
+        "first_event": "2026-09-03T14:05:00",
+        "true_start": "2026-09-03T14:05:00",
+        "order_correct": true
+      }
+    ]
+  },
+  "clean_dataset": {
+    "log_lines": 6411,
+    "benign_but_weird_cases": 7,
+    "alerts_raised": 0,
+    "flagged_single_events": 7,
+    "watchlisted": 5
+  },
+  "benign_weird_users_alerted": []
+}

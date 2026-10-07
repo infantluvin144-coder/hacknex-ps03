@@ -1,0 +1,195 @@
+{
+  "severity": "CRITICAL",
+  "risk": 0.96,
+  "users": [
+    "user04"
+  ],
+  "devices": [
+    "UNK-7731"
+  ],
+  "ips": [
+    "185.220.101.4"
+  ],
+  "apps": [
+    "endpoint-agent",
+    "fileserver",
+    "vpn"
+  ],
+  "start": "2026-09-05T02:10:00",
+  "end": "2026-09-05T03:00:30",
+  "stages": [
+    {
+      "stage": "Initial Access",
+      "first_ts": "2026-09-05T02:10:00",
+      "last_ts": "2026-09-05T02:10:00",
+      "n_events": 1,
+      "score": 0.7,
+      "why": "first login from new geo RO (185.220.101.4), unrecognised device UNK-7731, off-hours",
+      "evidence": [
+        "L003658"
+      ],
+      "sample_rows": [
+        {
+          "log_id": "L003658",
+          "timestamp": "2026-09-05T02:10:00",
+          "user": "user04",
+          "device": "UNK-7731",
+          "ip": "185.220.101.4",
+          "action": "login",
+          "object": ""
+        }
+      ]
+    },
+    {
+      "stage": "Collection",
+      "first_ts": "2026-09-05T02:20:00",
+      "last_ts": "2026-09-05T02:27:00",
+      "n_events": 15,
+      "score": 0.55,
+      "why": "first-ever access to sensitive folder 'fin/', 10 sensitive reads in 10 min",
+      "evidence": [
+        "L003659",
+        "L003660",
+        "L003661",
+        "L003662",
+        "L003663",
+        "L003664",
+        "L003665",
+        "L003666",
+        "L003667",
+        "L003668",
+        "L003669",
+        "L003670",
+        "L003671",
+        "L003672",
+        "L003673"
+      ],
+      "sample_rows": [
+        {
+          "log_id": "L003659",
+          "timestamp": "2026-09-05T02:20:00",
+          "user": "user04",
+          "device": "UNK-7731",
+          "ip": "185.220.101.4",
+          "action": "file_read",
+          "object": "hr/records_0"
+        },
+        {
+          "log_id": "L003660",
+          "timestamp": "2026-09-05T02:20:30",
+          "user": "user04",
+          "device": "UNK-7731",
+          "ip": "185.220.101.4",
+          "action": "file_read",
+          "object": "fin/records_1"
+        },
+        {
+          "log_id": "L003661",
+          "timestamp": "2026-09-05T02:21:00",
+          "user": "user04",
+          "device": "UNK-7731",
+          "ip": "185.220.101.4",
+          "action": "file_read",
+          "object": "hr/records_2"
+        }
+      ]
+    },
+    {
+      "stage": "Exfiltration",
+      "first_ts": "2026-09-05T02:55:00",
+      "last_ts": "2026-09-05T03:00:30",
+      "n_events": 12,
+      "score": 0.7,
+      "why": "first removable-media copy ever seen for this user - sensitive data",
+      "evidence": [
+        "L003674",
+        "L003675",
+        "L003676",
+        "L003677",
+        "L003678",
+        "L003679",
+        "L003680",
+        "L003681",
+        "L003682",
+        "L003683",
+        "L003684",
+        "L003685"
+      ],
+      "sample_rows": [
+        {
+          "log_id": "L003674",
+          "timestamp": "2026-09-05T02:55:00",
+          "user": "user04",
+          "device": "UNK-7731",
+          "ip": "185.220.101.4",
+          "action": "usb_copy",
+          "object": "fin/payroll_0"
+        },
+        {
+          "log_id": "L003675",
+          "timestamp": "2026-09-05T02:55:30",
+          "user": "user04",
+          "device": "UNK-7731",
+          "ip": "185.220.101.4",
+          "action": "usb_copy",
+          "object": "fin/payroll_1"
+        },
+        {
+          "log_id": "L003676",
+          "timestamp": "2026-09-05T02:56:00",
+          "user": "user04",
+          "device": "UNK-7731",
+          "ip": "185.220.101.4",
+          "action": "usb_copy",
+          "object": "fin/payroll_2"
+        }
+      ]
+    }
+  ],
+  "headline": "CRITICAL multi-stage intrusion involving user04: Initial Access -> Collection -> Exfiltration",
+  "narrative": [
+    "2026-09-05T02:10:00 [Initial Access] first login from new geo RO (185.220.101.4), unrecognised device UNK-7731, off-hours. Evidence: L003658.",
+    "2026-09-05T02:20:00 [Collection] first-ever access to sensitive folder 'fin/', 10 sensitive reads in 10 min. Evidence: L003659, L003660, L003661, L003662 (+11 more).",
+    "2026-09-05T02:55:00 [Exfiltration] first removable-media copy ever seen for this user - sensitive data. Evidence: L003674, L003675, L003676, L003677 (+8 more)."
+  ],
+  "why_flagged": "3 kill-chain stages linked through shared entities, in chronological order. Each stage is individually weak; risk = noisy-OR of stage scores = 0.96. Every statement above cites the log IDs it is based on.",
+  "actions": [
+    "Disable account(s) user04 pending investigation",
+    "Force password reset + revoke active sessions for user04; block IP(s) 185.220.101.4",
+    "Audit access to sensitive folders; check DLP logs for user04",
+    "Isolate device(s) UNK-7731; block outbound destination(s) n/a; inspect removable media / uploaded data"
+  ],
+  "graph": {
+    "edges": [
+      [
+        "user04",
+        "185.220.101.4"
+      ],
+      [
+        "user04",
+        "UNK-7731"
+      ],
+      [
+        "user04",
+        "endpoint-agent"
+      ],
+      [
+        "user04",
+        "fileserver"
+      ],
+      [
+        "user04",
+        "vpn"
+      ]
+    ],
+    "kinds": {
+      "UNK-7731": "device",
+      "185.220.101.4": "ip",
+      "vpn": "app",
+      "user04": "user",
+      "fileserver": "app",
+      "endpoint-agent": "app"
+    }
+  },
+  "id": "ALERT-02"
+}

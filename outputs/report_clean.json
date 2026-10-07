@@ -1,0 +1,79 @@
+{
+  "summary": {
+    "logs_processed": 6411,
+    "flagged_events": 7,
+    "alerts": 0,
+    "watchlist": 5
+  },
+  "alerts": [],
+  "watchlist": [
+    {
+      "users": [
+        "user20"
+      ],
+      "risk": 0.45,
+      "stages": [
+        "Initial Access"
+      ],
+      "evidence": [
+        "L003802",
+        "L004752"
+      ],
+      "suppressed_because": "only one kill-chain stage - not enough to call an attack"
+    },
+    {
+      "users": [
+        "user28"
+      ],
+      "risk": 0.67,
+      "stages": [
+        "Initial Access",
+        "Exfiltration"
+      ],
+      "evidence": [
+        "L004683",
+        "L005392"
+      ],
+      "suppressed_because": "combined risk 0.67 below alert threshold 0.7"
+    },
+    {
+      "users": [
+        "user30"
+      ],
+      "risk": 0.35,
+      "stages": [
+        "Collection"
+      ],
+      "evidence": [
+        "L004864"
+      ],
+      "suppressed_because": "only one kill-chain stage - not enough to call an attack"
+    },
+    {
+      "users": [
+        "user24"
+      ],
+      "risk": 0.6,
+      "stages": [
+        "Exfiltration"
+      ],
+      "evidence": [
+        "L005254"
+      ],
+      "suppressed_because": "only one kill-chain stage - not enough to call an attack"
+    },
+    {
+      "users": [
+        "user22"
+      ],
+      "risk": 0.4,
+      "stages": [
+        "Exfiltration"
+      ],
+      "evidence": [
+        "L005468"
+      ],
+      "suppressed_because": "only one kill-chain stage - not enough to call an attack"
+    }
+  ]
+}

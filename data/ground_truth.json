@@ -1,0 +1,72 @@
+{
+  "attacks": [
+    {
+      "id": "A1",
+      "user": "user04",
+      "start": "2026-09-05T02:10:00",
+      "stages": [
+        "Initial Access",
+        "Collection",
+        "Exfiltration"
+      ]
+    },
+    {
+      "id": "A2",
+      "user": "user13",
+      "start": "2026-09-06T02:50:00",
+      "stages": [
+        "Initial Access",
+        "Privilege Escalation",
+        "Discovery",
+        "Exfiltration"
+      ]
+    },
+    {
+      "id": "A3",
+      "user": "user07",
+      "start": "2026-09-03T14:05:00",
+      "stages": [
+        "Initial Access",
+        "Collection",
+        "Exfiltration"
+      ]
+    }
+  ],
+  "benign_weird": [
+    {
+      "id": "W1",
+      "user": "user20",
+      "note": "traveller logs in from a new country (1 stage only)"
+    },
+    {
+      "id": "W2",
+      "user": "user21",
+      "note": "finance user works at 1 AM on familiar finance files"
+    },
+    {
+      "id": "W3",
+      "user": "user22",
+      "note": "first-ever USB copy, but of a public handbook"
+    },
+    {
+      "id": "W4",
+      "user": "user24",
+      "note": "engineer uploads 300 MB to a new cloud service"
+    },
+    {
+      "id": "W5",
+      "user": "user26",
+      "note": "forgot password: 6 failed logins from usual IP, then success"
+    },
+    {
+      "id": "W6",
+      "user": "user28",
+      "note": "traveller (new country) + first USB copy of a public file"
+    },
+    {
+      "id": "W7",
+      "user": "user30",
+      "note": "HR user opens one finance file"
+    }
+  ]
+}

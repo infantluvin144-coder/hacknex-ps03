@@ -1,0 +1,625 @@
+{
+  "summary": {
+    "logs_processed": 6499,
+    "flagged_events": 68,
+    "alerts": 3,
+    "watchlist": 5
+  },
+  "alerts": [
+    {
+      "severity": "CRITICAL",
+      "risk": 0.98,
+      "users": [
+        "user13"
+      ],
+      "devices": [
+        "UNK-5521"
+      ],
+      "ips": [
+        "203.0.113.77"
+      ],
+      "apps": [
+        "active-directory",
+        "cloud-gateway",
+        "fileserver",
+        "sso"
+      ],
+      "start": "2026-09-06T03:01:00",
+      "end": "2026-09-06T03:30:00",
+      "stages": [
+        {
+          "stage": "Initial Access",
+          "first_ts": "2026-09-06T03:01:00",
+          "last_ts": "2026-09-06T03:01:00",
+          "n_events": 1,
+          "score": 0.7,
+          "why": "8 failed logins from new IP 203.0.113.77 followed by a success (brute force)",
+          "evidence": [
+            "L004662"
+          ],
+          "sample_rows": [
+            {
+              "log_id": "L004662",
+              "timestamp": "2026-09-06T03:01:00",
+              "user": "user13",
+              "device": "UNK-5521",
+              "ip": "203.0.113.77",
+              "action": "login",
+              "object": ""
+            }
+          ]
+        },
+        {
+          "stage": "Privilege Escalation",
+          "first_ts": "2026-09-06T03:05:00",
+          "last_ts": "2026-09-06T03:05:00",
+          "n_events": 1,
+          "score": 0.7,
+          "why": "first privilege escalation ever seen for this user, off-hours",
+          "evidence": [
+            "L004663"
+          ],
+          "sample_rows": [
+            {
+              "log_id": "L004663",
+              "timestamp": "2026-09-06T03:05:00",
+              "user": "user13",
+              "device": "UNK-5521",
+              "ip": "203.0.113.77",
+              "action": "priv_escalate",
+              "object": ""
+            }
+          ]
+        },
+        {
+          "stage": "Discovery",
+          "first_ts": "2026-09-06T03:11:54",
+          "last_ts": "2026-09-06T03:14:24",
+          "n_events": 26,
+          "score": 0.4,
+          "why": "share enumeration burst (20 objects in 10 min), never seen for this user",
+          "evidence": [
+            "L004683",
+            "L004684",
+            "L004685",
+            "L004686",
+            "L004687",
+            "L004688",
+            "L004689",
+            "L004690",
+            "L004691",
+            "L004692",
+            "L004693",
+            "L004694",
+            "L004695",
+            "L004696",
+            "L004697",
+            "L004698",
+            "L004699",
+            "L004700",
+            "L004701",
+            "L004702",
+            "L004703",
+            "L004704",
+            "L004705",
+            "L004706",
+            "L004707",
+            "L004708"
+          ],
+          "sample_rows": [
+            {
+              "log_id": "L004683",
+              "timestamp": "2026-09-06T03:11:54",
+              "user": "user13",
+              "device": "UNK-5521",
+              "ip": "203.0.113.77",
+              "action": "list_share",
+              "object": "shares/dir_19"
+            },
+            {
+              "log_id": "L004684",
+              "timestamp": "2026-09-06T03:12:00",
+              "user": "user13",
+              "device": "UNK-5521",
+              "ip": "203.0.113.77",
+              "action": "list_share",
+              "object": "shares/dir_20"
+            },
+            {
+              "log_id": "L004685",
+              "timestamp": "2026-09-06T03:12:06",
+              "user": "user13",
+              "device": "UNK-5521",
+              "ip": "203.0.113.77",
+              "action": "list_share",
+              "object": "shares/dir_21"
+            }
+          ]
+        },
+        {
+          "stage": "Exfiltration",
+          "first_ts": "2026-09-06T03:30:00",
+          "last_ts": "2026-09-06T03:30:00",
+          "n_events": 1,
+          "score": 0.6,
+          "why": "upload of 800 MB to never-seen destination 198.51.100.9",
+          "evidence": [
+            "L004709"
+          ],
+          "sample_rows": [
+            {
+              "log_id": "L004709",
+              "timestamp": "2026-09-06T03:30:00",
+              "user": "user13",
+              "device": "UNK-5521",
+              "ip": "203.0.113.77",
+              "action": "upload",
+              "object": "198.51.100.9"
+            }
+          ]
+        }
+      ],
+      "headline": "CRITICAL multi-stage intrusion involving user13: Initial Access -> Privilege Escalation -> Discovery -> Exfiltration",
+      "narrative": [
+        "2026-09-06T03:01:00 [Initial Access] 8 failed logins from new IP 203.0.113.77 followed by a success (brute force). Evidence: L004662.",
+        "2026-09-06T03:05:00 [Privilege Escalation] first privilege escalation ever seen for this user, off-hours. Evidence: L004663.",
+        "2026-09-06T03:11:54 [Discovery] share enumeration burst (20 objects in 10 min), never seen for this user. Evidence: L004683, L004684, L004685, L004686 (+22 more).",
+        "2026-09-06T03:30:00 [Exfiltration] upload of 800 MB to never-seen destination 198.51.100.9. Evidence: L004709."
+      ],
+      "why_flagged": "4 kill-chain stages linked through shared entities, in chronological order. Each stage is individually weak; risk = noisy-OR of stage scores = 0.98. Every statement above cites the log IDs it is based on.",
+      "actions": [
+        "Disable account(s) user13 pending investigation",
+        "Force password reset + revoke active sessions for user13; block IP(s) 203.0.113.77",
+        "Review and roll back privilege/group changes made by user13",
+        "Review share-enumeration activity; tighten share permissions for user13",
+        "Isolate device(s) UNK-5521; block outbound destination(s) 198.51.100.9; inspect removable media / uploaded data"
+      ],
+      "graph": {
+        "edges": [
+          [
+            "user13",
+            "203.0.113.77"
+          ],
+          [
+            "user13",
+            "UNK-5521"
+          ],
+          [
+            "user13",
+            "active-directory"
+          ],
+          [
+            "user13",
+            "cloud-gateway"
+          ],
+          [
+            "user13",
+            "fileserver"
+          ],
+          [
+            "user13",
+            "sso"
+          ]
+        ],
+        "kinds": {
+          "UNK-5521": "device",
+          "203.0.113.77": "ip",
+          "sso": "app",
+          "user13": "user",
+          "active-directory": "app",
+          "fileserver": "app",
+          "cloud-gateway": "app"
+        }
+      },
+      "id": "ALERT-01"
+    },
+    {
+      "severity": "CRITICAL",
+      "risk": 0.96,
+      "users": [
+        "user04"
+      ],
+      "devices": [
+        "UNK-7731"
+      ],
+      "ips": [
+        "185.220.101.4"
+      ],
+      "apps": [
+        "endpoint-agent",
+        "fileserver",
+        "vpn"
+      ],
+      "start": "2026-09-05T02:10:00",
+      "end": "2026-09-05T03:00:30",
+      "stages": [
+        {
+          "stage": "Initial Access",
+          "first_ts": "2026-09-05T02:10:00",
+          "last_ts": "2026-09-05T02:10:00",
+          "n_events": 1,
+          "score": 0.7,
+          "why": "first login from new geo RO (185.220.101.4), unrecognised device UNK-7731, off-hours",
+          "evidence": [
+            "L003658"
+          ],
+          "sample_rows": [
+            {
+              "log_id": "L003658",
+              "timestamp": "2026-09-05T02:10:00",
+              "user": "user04",
+              "device": "UNK-7731",
+              "ip": "185.220.101.4",
+              "action": "login",
+              "object": ""
+            }
+          ]
+        },
+        {
+          "stage": "Collection",
+          "first_ts": "2026-09-05T02:20:00",
+          "last_ts": "2026-09-05T02:27:00",
+          "n_events": 15,
+          "score": 0.55,
+          "why": "first-ever access to sensitive folder 'fin/', 10 sensitive reads in 10 min",
+          "evidence": [
+            "L003659",
+            "L003660",
+            "L003661",
+            "L003662",
+            "L003663",
+            "L003664",
+            "L003665",
+            "L003666",
+            "L003667",
+            "L003668",
+            "L003669",
+            "L003670",
+            "L003671",
+            "L003672",
+            "L003673"
+          ],
+          "sample_rows": [
+            {
+              "log_id": "L003659",
+              "timestamp": "2026-09-05T02:20:00",
+              "user": "user04",
+              "device": "UNK-7731",
+              "ip": "185.220.101.4",
+              "action": "file_read",
+              "object": "hr/records_0"
+            },
+            {
+              "log_id": "L003660",
+              "timestamp": "2026-09-05T02:20:30",
+              "user": "user04",
+              "device": "UNK-7731",
+              "ip": "185.220.101.4",
+              "action": "file_read",
+              "object": "fin/records_1"
+            },
+            {
+              "log_id": "L003661",
+              "timestamp": "2026-09-05T02:21:00",
+              "user": "user04",
+              "device": "UNK-7731",
+              "ip": "185.220.101.4",
+              "action": "file_read",
+              "object": "hr/records_2"
+            }
+          ]
+        },
+        {
+          "stage": "Exfiltration",
+          "first_ts": "2026-09-05T02:55:00",
+          "last_ts": "2026-09-05T03:00:30",
+          "n_events": 12,
+          "score": 0.7,
+          "why": "first removable-media copy ever seen for this user - sensitive data",
+          "evidence": [
+            "L003674",
+            "L003675",
+            "L003676",
+            "L003677",
+            "L003678",
+            "L003679",
+            "L003680",
+            "L003681",
+            "L003682",
+            "L003683",
+            "L003684",
+            "L003685"
+          ],
+          "sample_rows": [
+            {
+              "log_id": "L003674",
+              "timestamp": "2026-09-05T02:55:00",
+              "user": "user04",
+              "device": "UNK-7731",
+              "ip": "185.220.101.4",
+              "action": "usb_copy",
+              "object": "fin/payroll_0"
+            },
+            {
+              "log_id": "L003675",
+              "timestamp": "2026-09-05T02:55:30",
+              "user": "user04",
+              "device": "UNK-7731",
+              "ip": "185.220.101.4",
+              "action": "usb_copy",
+              "object": "fin/payroll_1"
+            },
+            {
+              "log_id": "L003676",
+              "timestamp": "2026-09-05T02:56:00",
+              "user": "user04",
+              "device": "UNK-7731",
+              "ip": "185.220.101.4",
+              "action": "usb_copy",
+              "object": "fin/payroll_2"
+            }
+          ]
+        }
+      ],
+      "headline": "CRITICAL multi-stage intrusion involving user04: Initial Access -> Collection -> Exfiltration",
+      "narrative": [
+        "2026-09-05T02:10:00 [Initial Access] first login from new geo RO (185.220.101.4), unrecognised device UNK-7731, off-hours. Evidence: L003658.",
+        "2026-09-05T02:20:00 [Collection] first-ever access to sensitive folder 'fin/', 10 sensitive reads in 10 min. Evidence: L003659, L003660, L003661, L003662 (+11 more).",
+        "2026-09-05T02:55:00 [Exfiltration] first removable-media copy ever seen for this user - sensitive data. Evidence: L003674, L003675, L003676, L003677 (+8 more)."
+      ],
+      "why_flagged": "3 kill-chain stages linked through shared entities, in chronological order. Each stage is individually weak; risk = noisy-OR of stage scores = 0.96. Every statement above cites the log IDs it is based on.",
+      "actions": [
+        "Disable account(s) user04 pending investigation",
+        "Force password reset + revoke active sessions for user04; block IP(s) 185.220.101.4",
+        "Audit access to sensitive folders; check DLP logs for user04",
+        "Isolate device(s) UNK-7731; block outbound destination(s) n/a; inspect removable media / uploaded data"
+      ],
+      "graph": {
+        "edges": [
+          [
+            "user04",
+            "185.220.101.4"
+          ],
+          [
+            "user04",
+            "UNK-7731"
+          ],
+          [
+            "user04",
+            "endpoint-agent"
+          ],
+          [
+            "user04",
+            "fileserver"
+          ],
+          [
+            "user04",
+            "vpn"
+          ]
+        ],
+        "kinds": {
+          "UNK-7731": "device",
+          "185.220.101.4": "ip",
+          "vpn": "app",
+          "user04": "user",
+          "fileserver": "app",
+          "endpoint-agent": "app"
+        }
+      },
+      "id": "ALERT-02"
+    },
+    {
+      "severity": "MEDIUM",
+      "risk": 0.75,
+      "users": [
+        "user07"
+      ],
+      "devices": [
+        "LAP-07"
+      ],
+      "ips": [
+        "91.108.4.20"
+      ],
+      "apps": [
+        "cloud-gateway",
+        "fileserver",
+        "vpn"
+      ],
+      "start": "2026-09-03T14:05:00",
+      "end": "2026-09-06T01:10:00",
+      "stages": [
+        {
+          "stage": "Initial Access",
+          "first_ts": "2026-09-03T14:05:00",
+          "last_ts": "2026-09-03T14:05:00",
+          "n_events": 1,
+          "score": 0.45,
+          "why": "first login from new geo BR (91.108.4.20)",
+          "evidence": [
+            "L002327"
+          ],
+          "sample_rows": [
+            {
+              "log_id": "L002327",
+              "timestamp": "2026-09-03T14:05:00",
+              "user": "user07",
+              "device": "LAP-07",
+              "ip": "91.108.4.20",
+              "action": "login",
+              "object": ""
+            }
+          ]
+        },
+        {
+          "stage": "Collection",
+          "first_ts": "2026-09-04T16:20:00",
+          "last_ts": "2026-09-05T22:30:00",
+          "n_events": 2,
+          "score": 0.35,
+          "why": "first-ever access to sensitive folder 'fin/'",
+          "evidence": [
+            "L003508",
+            "L004652"
+          ],
+          "sample_rows": [
+            {
+              "log_id": "L003508",
+              "timestamp": "2026-09-04T16:20:00",
+              "user": "user07",
+              "device": "LAP-07",
+              "ip": "91.108.4.20",
+              "action": "file_read",
+              "object": "fin/payroll_2026.xlsx"
+            },
+            {
+              "log_id": "L004652",
+              "timestamp": "2026-09-05T22:30:00",
+              "user": "user07",
+              "device": "LAP-07",
+              "ip": "91.108.4.20",
+              "action": "file_read",
+              "object": "hr/salaries.csv"
+            }
+          ]
+        },
+        {
+          "stage": "Exfiltration",
+          "first_ts": "2026-09-06T01:10:00",
+          "last_ts": "2026-09-06T01:10:00",
+          "n_events": 1,
+          "score": 0.3,
+          "why": "upload of 20 MB to never-seen destination 45.9.148.22",
+          "evidence": [
+            "L004653"
+          ],
+          "sample_rows": [
+            {
+              "log_id": "L004653",
+              "timestamp": "2026-09-06T01:10:00",
+              "user": "user07",
+              "device": "LAP-07",
+              "ip": "91.108.4.20",
+              "action": "upload",
+              "object": "45.9.148.22"
+            }
+          ]
+        }
+      ],
+      "headline": "MEDIUM multi-stage intrusion involving user07: Initial Access -> Collection -> Exfiltration",
+      "narrative": [
+        "2026-09-03T14:05:00 [Initial Access] first login from new geo BR (91.108.4.20). Evidence: L002327.",
+        "2026-09-04T16:20:00 [Collection] first-ever access to sensitive folder 'fin/'. Evidence: L003508, L004652.",
+        "2026-09-06T01:10:00 [Exfiltration] upload of 20 MB to never-seen destination 45.9.148.22. Evidence: L004653."
+      ],
+      "why_flagged": "3 kill-chain stages linked through shared entities, in chronological order. Each stage is individually weak; risk = noisy-OR of stage scores = 0.75. Every statement above cites the log IDs it is based on.",
+      "actions": [
+        "Force password reset + revoke active sessions for user07; block IP(s) 91.108.4.20",
+        "Audit access to sensitive folders; check DLP logs for user07",
+        "Isolate device(s) LAP-07; block outbound destination(s) 45.9.148.22; inspect removable media / uploaded data"
+      ],
+      "graph": {
+        "edges": [
+          [
+            "user07",
+            "91.108.4.20"
+          ],
+          [
+            "user07",
+            "LAP-07"
+          ],
+          [
+            "user07",
+            "cloud-gateway"
+          ],
+          [
+            "user07",
+            "fileserver"
+          ],
+          [
+            "user07",
+            "vpn"
+          ]
+        ],
+        "kinds": {
+          "LAP-07": "device",
+          "91.108.4.20": "ip",
+          "vpn": "app",
+          "user07": "user",
+          "fileserver": "app",
+          "cloud-gateway": "app"
+        }
+      },
+      "id": "ALERT-03"
+    }
+  ],
+  "watchlist": [
+    {
+      "users": [
+        "user20"
+      ],
+      "risk": 0.45,
+      "stages": [
+        "Initial Access"
+      ],
+      "evidence": [
+        "L003832",
+        "L004840"
+      ],
+      "suppressed_because": "only one kill-chain stage - not enough to call an attack"
+    },
+    {
+      "users": [
+        "user28"
+      ],
+      "risk": 0.67,
+      "stages": [
+        "Initial Access",
+        "Exfiltration"
+      ],
+      "evidence": [
+        "L004771",
+        "L005480"
+      ],
+      "suppressed_because": "combined risk 0.67 below alert threshold 0.7"
+    },
+    {
+      "users": [
+        "user30"
+      ],
+      "risk": 0.35,
+      "stages": [
+        "Collection"
+      ],
+      "evidence": [
+        "L004952"
+      ],
+      "suppressed_because": "only one kill-chain stage - not enough to call an attack"
+    },
+    {
+      "users": [
+        "user24"
+      ],
+      "risk": 0.6,
+      "stages": [
+        "Exfiltration"
+      ],
+      "evidence": [
+        "L005342"
+      ],
+      "suppressed_because": "only one kill-chain stage - not enough to call an attack"
+    },
+    {
+      "users": [
+        "user22"
+      ],
+      "risk": 0.4,
+      "stages": [
+        "Exfiltration"
+      ],
+      "evidence": [
+        "L005556"
+      ],
+      "suppressed_because": "only one kill-chain stage - not enough to call an attack"
+    }
+  ]
+}
