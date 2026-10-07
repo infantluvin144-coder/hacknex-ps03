@@ -23,19 +23,40 @@ Schema: `log_id, timestamp, user, device, ip, geo, app, action, object, status, 
 * **Chaining**: flagged events are linked via shared user or external IP, split on >48 h silence (supports low-and-slow), and kept only if stages follow kill-chain order in time.
 * **False-positive control**: ≥2 stages + risk ≥ 0.70. Explainable scores, no black box.
 
+## ML second opinion (Isolation Forest)
+Rules decide and explain every alert. On top, an Isolation Forest scores each
+user-day against **that user's own normal** (12 features: new geo/device,
+off-hours, sensitive reads, USB, uploads, privilege changes...).
+
+| Rules say | ML says | Result |
+|---|---|---|
+| Alert | Unusual | **CONFIRMED** (higher trust) |
+| Alert | Normal | RULES-ONLY |
+| No alert | Unusual | ML-ONLY: watch-list, **never an alert** |
+
+On our test logs all 3 attacks are CONFIRMED. ML never raises an alert alone,
+so false-alarm control is unchanged.
+
+Run: `python3 ml_layer.py --logs data/attack_logs.csv`
+
+**Limit:** the top 3% percentile is fixed, so clean logs also show a few
+ML-only watch-list rows (no alerts). Tuned on self-generated data only.
+
 ## Evidence & explanation
 Every stage lists its `log_id`s, the reason string, and its score; sample raw log lines are embedded; the narrative
 cites log IDs in every sentence. See `outputs/report_attack.html`.
 
 ## Technologies
-Core detection: Python 3.9+ standard library only. Web dashboard: Streamlit + pandas (+ optional Plotly). No external APIs, datasets or pre-trained models.
+Core detection: Python 3.9+ standard library only (rule-based, explainable). ML second opinion: scikit-learn (Isolation Forest, trained on the input logs themselves, no pre-trained models). Web dashboard: Streamlit + pandas (+ optional Plotly). No external APIs or external datasets.
+
 
 ## Install, configure, run
 ```bash
-git clone <your-repo-url> && cd hacknex_ps03
+git clone https://github.com/infantluvin144-coder/hacknex-ps03.git && cd hacknex-ps03
 pip install -r requirements.txt      # only needed for the web app
 streamlit run app.py                 # web dashboard at http://localhost:8501
 python evaluate.py                      # generates data, runs detector, prints precision/recall
+python ml_layer.py --logs data/attack_logs.csv   # ML second opinion
 # or step by step:
 python simulator.py --out data/logs.csv
 python detector.py --logs data/logs.csv --out outputs/report.json --html outputs/report.html
