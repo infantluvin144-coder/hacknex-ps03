@@ -50,12 +50,13 @@ if go and path:
         with st.spinner("Building baselines, linking events, scoring risk..."):
             st.session_state["report"] = detector.run(path)
             st.session_state["source"] = source
+            st.session_state["path"] = path
     except Exception as exc:
         st.sidebar.error(f"Could not analyse this file: {exc}")
 elif go:
     st.sidebar.warning("Upload a CSV first.")
 
-page = st.sidebar.radio("Page", ["Overview", "Attack Story", "Attack Replay", "Why NOT flagged", "Ask the Analyst"])
+page = st.sidebar.radio("Page", ["Overview", "Attack Story", "Attack Replay", "Why NOT flagged", "ML Second Opinion", "Ask the Analyst"])
 
 rep = st.session_state.get("report")
 if rep is None:
@@ -151,6 +152,28 @@ elif page == "Why NOT flagged":
         st.dataframe(pd.DataFrame(webutil.watchlist_table(rep)), use_container_width=True, hide_index=True)
     else:
         st.info("Nothing was watch-listed.")
+
+elif page == "ML Second Opinion":
+    import ml_layer
+    st.subheader("ML second opinion (Isolation Forest) - rough prototype")
+    st.caption("Rules decide and explain. The model scores each user-day against that user's OWN normal. "
+               "ML alone never raises an alert - it only confirms a rule alert or adds to the watch-list.")
+    with st.spinner("Scoring user-days..."):
+        ml = ml_layer.second_opinion(st.session_state["path"])
+    if ml["rules"]["alerts"]:
+        st.markdown("#### Rule alerts and what the ML model says")
+        for a in ml["rules"]["alerts"]:
+            icon = "✅" if a["ml_verdict"] == "CONFIRMED" else "⚠️"
+            st.markdown(f"{icon} **{a['id']}** {', '.join(a['users'])} - risk {a['risk']} - **{a['ml_verdict']}**")
+            for h in a["ml_support"]:
+                st.caption(f"ML {h['day']} score {h['score']}: " + ", ".join(h["drivers"]))
+    st.markdown("#### ML-only: unusual days with NO rule alert (watch-list, not alerts)")
+    if ml["ml_only"]:
+        st.dataframe(pd.DataFrame([dict(User=v["user"], Day=v["day"], Score=v["score"],
+                                        Why=", ".join(v["drivers"]), Logs=", ".join(v["log_ids"]))
+                                   for v in ml["ml_only"]]), use_container_width=True, hide_index=True)
+    else:
+        st.info("Nothing unusual outside the rule alerts.")
 
 elif page == "Ask the Analyst":
     st.subheader("Ask the Analyst")
